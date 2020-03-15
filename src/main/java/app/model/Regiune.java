@@ -1,11 +1,16 @@
-package model;
+package app.model;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
 public class Regiune extends Tara{
     private String numeRegiune;
 
-    public Regiune(String numeTara, String numeRegiune) {
+    @JsonCreator
+    public Regiune(@JsonProperty("numeTara") String numeTara,
+                   @JsonProperty("numeRegiune") String numeRegiune) {
         super(numeTara);
         this.numeRegiune = numeRegiune;
     }

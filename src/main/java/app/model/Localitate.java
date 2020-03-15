@@ -1,13 +1,19 @@
-package model;
+package app.model;
 
-import java.awt.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Localitate extends Regiune {
     private String numeLocalitate;
-    List sport;
+    ArrayList<SportExtrem> sport;
 
-    public Localitate(String numeTara, String numeRegiune, String numeLocalitate, List sport) {
+    @JsonCreator
+    public Localitate(@JsonProperty("numeTara") String numeTara,
+                      @JsonProperty("numeRegiune") String numeRegiune,
+                      @JsonProperty("numeLocalitate") String numeLocalitate,
+                      @JsonProperty("sport") ArrayList<SportExtrem> sport) {
         super(numeTara, numeRegiune);
         this.numeLocalitate = numeLocalitate;
         this.sport = sport;
@@ -17,15 +23,11 @@ public class Localitate extends Regiune {
         return numeLocalitate;
     }
 
-    public void setNumeLocalitate(String numeLocalitate) {
-        this.numeLocalitate = numeLocalitate;
-    }
-
-    public List getSport() {
+    public ArrayList<SportExtrem> getSport() {
         return sport;
     }
 
-    public void setSport(List sport) {
+    public void setSport(ArrayList<SportExtrem> sport) {
         this.sport = sport;
     }
 

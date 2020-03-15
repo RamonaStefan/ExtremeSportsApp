@@ -1,15 +1,21 @@
-package model;
+package app.model;
 
-import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class SportExtrem {
     String numeSport;
-    LocalDate startDate;
-    LocalDate endDate;
-    float costMediuZi;
+    String startDate;
+    String endDate;
+    double costMediuZi;
 
-    public SportExtrem(String numeSport, LocalDate startDate, LocalDate endDate, float costMediuZi) {
+    @JsonCreator
+    public SportExtrem(@JsonProperty("numeSport") String numeSport,
+                       @JsonProperty("startDate") String startDate,
+                       @JsonProperty("endDate") String endDate,
+                       @JsonProperty("costMediuZi") double costMediuZi) {
         this.numeSport = numeSport;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -24,23 +30,23 @@ public class SportExtrem {
         this.numeSport = numeSport;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public float getCostMediuZi() {
+    public double getCostMediuZi() {
         return costMediuZi;
     }
 
@@ -53,7 +59,7 @@ public class SportExtrem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SportExtrem that = (SportExtrem) o;
-        return Float.compare(that.costMediuZi, costMediuZi) == 0 &&
+        return Double.compare(that.costMediuZi, costMediuZi) == 0 &&
                 Objects.equals(numeSport, that.numeSport) &&
                 Objects.equals(startDate, that.startDate) &&
                 Objects.equals(endDate, that.endDate);
@@ -73,4 +79,6 @@ public class SportExtrem {
                 ", costMediuZi=" + costMediuZi +
                 '}';
     }
+
+
 }

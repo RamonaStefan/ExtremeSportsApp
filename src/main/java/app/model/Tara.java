@@ -1,11 +1,15 @@
-package model;
+package app.model;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
 public class Tara {
     private String numeTara;
 
-    public Tara(String numeTara) {
+    @JsonCreator
+    public Tara(@JsonProperty("numeTara") String numeTara) {
         this.numeTara = numeTara;
     }
 
