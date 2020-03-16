@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class giDao<T> {
+public class Dao<T> {
     private final Logger logger = LoggerFactory.getLogger(Dao.class);
 
     private final Connection connection;
