@@ -57,7 +57,7 @@ public class Controller {
         this.sportExtremService = userService;
     }
 
-    public Integer[] getMonths(String lunaStart, String lunaEnd) {
+    private Integer[] getMonths(String lunaStart, String lunaEnd) {
         int start = months.get(lunaStart);
         int end = months.get(lunaEnd);
         int noMonths =  (start > end? 12 - start + end: end - start) + 1;
@@ -74,6 +74,17 @@ public class Controller {
         return month;
     }
 
+    /**
+     *
+     * @param sports list of sport to look for
+     * @param ziStart day start month
+     * @param lunaStart start month
+     * @param ziEnd day end month
+     * @param lunaEnd end month
+     * @return locations with that list of sports available
+     *
+     * @throws IOException
+     */
     @GetMapping(path="/findLoc", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Localitate>  findPlaces(@RequestParam(name = "sport", required = false) ArrayList<String>  sports,
                                         @RequestParam(name = "ziStart", required = false) Integer ziStart,
@@ -108,9 +119,8 @@ public class Controller {
                         .collect(Collectors.toList());
             }
         }
-
+        Collections.sort(locs);
         return locs;
-//
     }
 
     /**

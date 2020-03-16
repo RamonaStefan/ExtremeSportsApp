@@ -2,12 +2,11 @@ package app.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.apache.tomcat.jni.Local;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
-public class Localitate extends Regiune implements Comparable<Localitate>  {
+public class Localitate extends Regiune  implements Comparable<Localitate>  {
     private String numeLocalitate;
     ArrayList<SportExtrem> sport;
 
@@ -19,14 +18,6 @@ public class Localitate extends Regiune implements Comparable<Localitate>  {
         super(numeTara, numeRegiune);
         this.numeLocalitate = numeLocalitate;
         this.sport = sport;
-    }
-
-    @Override
-    public int compareTo(Localitate u) {
-        if (getCreatedOn() == null || u.getCreatedOn() == null) {
-            return 0;
-        }
-        return getCreatedOn().compareTo(u.getCreatedOn());
     }
 
     public String getNumeLocalitate() {
@@ -63,4 +54,23 @@ public class Localitate extends Regiune implements Comparable<Localitate>  {
                 ", sport=" + sport +
                 '}';
     }
+
+    @Override
+    public int compareTo(Localitate u) {
+        Collections.sort(sport);
+        Collections.sort(u.getSport());
+        double cost1 = sport.get(0).getCostMediuZi();
+        double cost2 = u.getSport().get(0).getCostMediuZi();
+        if (cost1 == 0 || cost2 == 0) {
+            return 0;
+        }
+        if (cost1 == cost2) {
+            return 0;
+        }
+        if(cost1 < cost2) {
+            return -1;
+        }
+        return 1;
+    }
+
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Objects;
 
-public class SportExtrem {
+public class SportExtrem implements Comparable<SportExtrem>{
     String numeSport;
     String startDate;
     String endDate;
@@ -21,6 +21,21 @@ public class SportExtrem {
         this.endDate = endDate;
         this.costMediuZi = costMediuZi;
     }
+
+    @Override
+    public int compareTo(SportExtrem u) {
+        if (getCostMediuZi() == 0 || u.getCostMediuZi() == 0) {
+            return 0;
+        }
+        if (getCostMediuZi() == u.getCostMediuZi()) {
+            return 0;
+        }
+        if(getCostMediuZi() < u.getCostMediuZi()) {
+            return -1;
+        }
+        return 1;
+    }
+
 
     public String getNumeSport() {
         return numeSport;
