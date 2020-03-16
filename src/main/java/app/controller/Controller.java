@@ -8,9 +8,7 @@ import app.service.Service;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,12 +17,100 @@ public class Controller {
     private final Service<Regiune> regiuneService;
     private final Service<Tara> taraService;
     private final Service<SportExtrem> sportExtremService;
+    private final HashMap<String,Integer> months = new HashMap<String, Integer>() {
+        {
+            put("ianuarie", 1);
+            put("februarie", 2);
+            put("martie", 3);
+            put("aprilie", 4);
+            put("mai", 5);
+            put("iunie", 6);
+            put("iulie", 7);
+            put("august", 8);
+            put("septembrie", 9);
+            put("octombrie", 10);
+            put("noiembrie", 11);
+            put("decembrie", 12);
+        }
+    };
+    private final HashMap<String,Integer> days = new HashMap<String, Integer>() {
+        {
+            put("ianuarie", 31);
+            put("februarie", 28);
+            put("martie", 31);
+            put("aprilie", 30);
+            put("mai", 31);
+            put("iunie", 30);
+            put("iulie", 31);
+            put("august", 31);
+            put("septembrie", 30);
+            put("octombrie", 31);
+            put("noiembrie", 30);
+            put("decembrie", 31);
+        }
+    };
 
     public Controller(Service<Localitate> campaignService, Service<Regiune> advertiserService, Service<Tara> publisherService, Service<SportExtrem> userService) {
         this.localitateService = campaignService;
         this.regiuneService = advertiserService;
         this.taraService = publisherService;
         this.sportExtremService = userService;
+    }
+
+    public Integer[] getMonths(String lunaStart, String lunaEnd) {
+        int start = months.get(lunaStart);
+        int end = months.get(lunaEnd);
+        int noMonths =  (start > end? 12 - start + end: end - start) + 1;
+        Integer[] month = new Integer[noMonths];
+        for (int i = 0 ; i < noMonths; i++) {
+            int m = (i + months.get(lunaStart)) % 12;
+            if (m == 0){
+                month[i] = 12;
+            }
+            else {
+                month[i] = (i + months.get(lunaStart)) % 12;
+            }
+        }
+        return month;
+    }
+
+    @GetMapping(path="/findLoc", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Localitate>  findPlaces(@RequestParam(name = "sport", required = false) ArrayList<String>  sports,
+                                        @RequestParam(name = "ziStart", required = false) Integer ziStart,
+                                        @RequestParam(name = "lunaStart", required = false) String lunaStart,
+                                        @RequestParam(name = "ziEnd", required = false) Integer ziEnd,
+                                        @RequestParam(name = "lunaEnd", required = false) String lunaEnd) throws IOException {
+        if((ziStart != null && ziStart < 0) || (ziEnd != null && ziEnd > days.get(lunaStart))) {
+            return null;
+        }
+        List<Localitate> locs = new ArrayList<Localitate>(localitateService.getAllInfo().values());
+        if (sports != null) {
+            locs = locs.stream()
+                    .filter(loc -> (loc.getSport().stream()
+                            .filter(sp -> sports.contains(sp.getNumeSport()))
+                            .collect(Collectors.toList())).size() > 0)
+                    .collect(Collectors.toList());
+        }
+        if (lunaStart != null & lunaEnd != null) {
+            if (sports != null) {
+                locs = locs.stream()
+                        .filter(loc -> (loc.getSport().stream()
+                                .filter(sp -> sports.contains(sp.getNumeSport()) &&
+                                        Arrays.asList(getMonths(sp.getStartDate(), sp.getEndDate())).containsAll(Arrays.asList(getMonths(lunaStart, lunaEnd))))
+                                .collect(Collectors.toList())).size() > 0)
+                        .collect(Collectors.toList());
+            }
+            else {
+                locs = locs.stream()
+                        .filter(loc -> (loc.getSport().stream()
+                                .filter(sp -> Arrays.asList(getMonths(sp.getStartDate(), sp.getEndDate())).containsAll(Arrays.asList(getMonths(lunaStart, sp.getEndDate()))))
+                                .collect(Collectors.toList())).size() > 0)
+                        .collect(Collectors.toList());
+            }
+        }
+
+        return locs;
+//
     }
 
     /**
@@ -38,7 +124,7 @@ public class Controller {
      *
      * @throws IOException
      */
-    @GetMapping(path="/locatie", produces = MediaType.APPLICATION_JSON_VALUE, params = {"loc","reg", "ctr"})
+    @GetMapping(path="/location", produces = MediaType.APPLICATION_JSON_VALUE, params = {"loc","reg", "ctr"})
     public List<Localitate>  getAllInformation(@RequestParam(name = "loc") String localitate, @RequestParam(name = "reg") String regiune, @RequestParam(name = "ctr") String tara) throws IOException {
         List<Localitate> locs = new ArrayList<Localitate>(localitateService.getAllInfo().values());
 
