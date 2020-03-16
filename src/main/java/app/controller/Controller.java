@@ -36,15 +36,27 @@ public class Controller {
      *
      * @throws IOException
      */
-    @GetMapping(path="/location", produces = MediaType.APPLICATION_JSON_VALUE, params = {"loc","reg", "ctr"})
-    public List<Localitate>  getAllInformation(@RequestParam(name = "loc") String localitate, @RequestParam(name = "reg") String regiune, @RequestParam(name = "ctr") String tara) throws IOException {
+    @GetMapping(path="/location", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Localitate>  getAllInformation(@RequestParam(name = "loc", required = false) String localitate,
+                                               @RequestParam(name = "reg", required = false) String regiune,
+                                               @RequestParam(name = "ctr", required = false) String tara) throws IOException {
         List<Localitate> locs = new ArrayList<Localitate>(localitateService.getAllInfo().values());
-
-        return locs.stream()
-                .filter(loc -> loc.getNumeLocalitate().equals(localitate))
-                .filter(loc -> loc.getNumeRegiune().equals(regiune))
-                .filter(loc -> loc.getNumeTara().equals(tara))
-                .collect(Collectors.toList());
+        if(tara != null) {
+            locs = locs.stream()
+                    .filter(loc -> loc.getNumeTara().equals(tara))
+                    .collect(Collectors.toList());
+        }
+        if(regiune != null){
+            locs = locs.stream()
+                    .filter(loc -> loc.getNumeRegiune().equals(regiune))
+                    .collect(Collectors.toList());
+        }
+        if(localitate != null) {
+            locs = locs.stream()
+                    .filter(loc -> loc.getNumeLocalitate().equals(localitate))
+                    .collect(Collectors.toList());
+        }
+        return locs;
     }
 
     /**
