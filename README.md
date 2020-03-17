@@ -68,5 +68,5 @@ DELETE http://localhost:8080/delloc?ctr=Romania&reg=Brasov&loc=Predeal
 ### User
 The user can get recommandations for trips by inputting a list of sports and a period of time:
 ``` 
-GET http://localhost:8080/findLoc?sport=ski&lunaStart=decembrie&lunaEnd=ianuarie 
+GET http://localhost:8080/findLoc?sport=ski&lunaStart=decembrie&lunaEnd=ianuarie&ziStart=1&ziEnd=10
 ```
