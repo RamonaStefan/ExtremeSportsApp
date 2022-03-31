@@ -11,7 +11,7 @@
     <properties>
         <slf4j.version>1.7.28</slf4j.version>
         <mysql-connector.version>8.0.18</mysql-connector.version>
-        <spring.version>2.1.5.RELEASE</spring.version>
+        <spring.version>2.5.12</spring.version>
     </properties>
 
     <build>
